@@ -9,10 +9,12 @@ export const clearInput = () => {
 //to clear the list of recipes displayed on UI
 export const clearResults = () => {
     elements.searchResList.innerHTML= '';
+    elements.searchResPages.innerHTML= '';
+
 };
 
 //to cutshort the title of recipe if they are too lengthy and place... at the end
-// eg: pasta with tomato and spinach
+// eg: pasta with tomato and spinach --> pasta with tomato and...
 const limitRecipeTitle = (title, limit = 17) =>{
     const newTitle = [];
     if (title.length>limit){
@@ -30,7 +32,7 @@ const limitRecipeTitle = (title, limit = 17) =>{
 // to return all of our recepies 
 const renderRecipe = recipe =>{
     //here is where actual rendering happen
-    /*we need to display each recipe in the left hand side and for this in ES5 we inserted an html
+    /*we need to display each recipe on LHS and for this in ES5 we inserted an html
       in one line. where as in ES6 instead we can simply copy html inside an template string
       as shown below  
     */
@@ -51,21 +53,40 @@ const renderRecipe = recipe =>{
     elements.searchResList.insertAdjacentHTML('beforeend',markup);
 };
 
+//displaying page buttons required
+
+const createButton = ( page, type) => `
+    <button class="btn-inline results__btn--${type}" data-goto = ${type === 'prev' ? page - 1 : page + 1}>
+        <svg class="search__icon">
+            <use href="img/icons.svg#icon-triangle-${type === 'prev' ? 'left': 'right'}"></use>
+        </svg>
+        <span>Page ${type === 'prev' ? page - 1 : page + 1}</span>
+    </button>
+`;
+
 const renderButtons = (page, numResults, resPerPage) => {
-    //1. we need to display next button on first page and page1 & page 2 navigation on 2nd page
-    // and prev page on the last page
+    //1. we need to display next button on first page and page1 & page 2 navigation on 2nd page and prev page on the last one
     // For this we need know the total number of pages present => no.of results/resPerPage ;
     const pages = Math.ceil(numResults / resPerPage);
-    if(page === 1){
-        //only button to next page
+
+
+    let button;
+    if(page === 1 && pages > 1) {
+        //only button to goto next page
+        button = createButton(page, 'next');
     }else if(page < pages){
         // buttons to prev and next pages
+        button =  `
+            ${createButton(page, 'prev')}
+            ${createButton(page, 'next')}
+        `;
     }
-    else if(page === pages){
-        // only button to prev page
+    else if(page === pages && pages > 1){
+        // only button to goto prev page
+        button = createButton(page, 'prev');
     }
         
-
+    elements.searchResPages.insertAdjacentHTML('afterbegin',button);
 };
 
 
@@ -76,5 +97,8 @@ export const renderResults = (recipes,page = 1, resPerPage = 10) => {
     const start = (page - 1) * resPerPage;
     const end = page * resPerPage;
     recipes.slice(start,end).forEach(renderRecipe);
+    
+    //render pagination buttons
+    renderButtons(page, recipes.length, resPerPage);
 };
 
