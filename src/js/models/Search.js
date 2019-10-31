@@ -1,12 +1,12 @@
 import axios from 'axios';
-import {apiAppID, apiKey} from '../config'
+import {apiAppID, apiKey,baseURL} from '../config'
 
 export default class Search{
     constructor(query){
         this.query =query;
     }
     async getResult(){
-        const baseURL = 'http://cors-anywhere.herokuapp.com/https://api.edamam.com';
+        
         //const proxy = 'https://cors-anywhere.herokuapp.com/';
 
         try{
