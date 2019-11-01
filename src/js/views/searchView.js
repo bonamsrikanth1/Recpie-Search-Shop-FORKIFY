@@ -23,11 +23,11 @@ export const highlightSelected = id => {
 
 //to cutshort the title of recipe if they are too lengthy and place... at the end
 // eg: pasta with tomato and spinach --> pasta with tomato and...
-const limitRecipeTitle = (title, limit = 17) =>{
+export const limitRecipeTitle = (title, limit = 17) =>{
     const newTitle = [];
     if (title.length>limit){
         title.split(' ').reduce((acc,curr) =>{
-            if(acc + curr.length <= 17){
+            if(acc + curr.length <= limit){
                 newTitle.push(curr);
             }
             return acc + curr.length;

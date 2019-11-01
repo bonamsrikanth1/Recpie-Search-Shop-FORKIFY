@@ -9,7 +9,7 @@ export default class Recipe{
         try{
             const recipeID = encodeURIComponent(`${recipeURL}${this.id}`)
             const results = await axios(`${baseURL}/search?r=${recipeID}&app_id=${apiAppID}&app_key=${apiKey}`);
-            console.log(results);
+            //console.log(results);
             this.title = results.data[0].label;
             this.author = results.data[0].source;
             this.img = results.data[0].image;
